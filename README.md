@@ -23,7 +23,7 @@ Then load the plugin by using CakePHP's console:
 ## Usage
 You can see the logs by going to
 http://app-address/log-reader
-<img src="https://imgur.com/8sCwLBh" alt="logs">
+<img src="https://i.imgur.com/8sCwLBh.png" alt="logs">
 
 ## License
 
