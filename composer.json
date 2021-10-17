@@ -1,5 +1,5 @@
 {
-    "name": "zunnu/LogReader",
+    "name": "zunnu/log-reader",
     "description": "LogReader plugin for CakePHP",
     "type": "cakephp-plugin",
     "license": "MIT",
