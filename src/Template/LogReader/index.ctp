@@ -1,14 +1,4 @@
 <?php
-	$types = [
-		'info' => 'Info',
-		'emergency' => 'Emergency',
-		'critical' => 'Critical',
-		'alert' => 'Alert',
-		'error' => 'Error',
-		'warning' => 'Warning',
-		'notice' => 'Notice',
-		'debug' => 'Debug'
-	];
 	$fileList = [];
 
 	if(!empty($files)) {

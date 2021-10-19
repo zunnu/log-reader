@@ -8,6 +8,17 @@ class Reader {
     // prefixes
     protected $config = [];
 
+    private $logTypes = [
+        'info' => 'Info',
+        'emergency' => 'Emergency',
+        'critical' => 'Critical',
+        'alert' => 'Alert',
+        'error' => 'Error',
+        'warning' => 'Warning',
+        'notice' => 'Notice',
+        'debug' => 'Debug'
+    ];
+
     public function __construct($config = []) {
         $this->config = $config;
     }
@@ -192,5 +203,9 @@ class Reader {
         }
 
         return $buildData;
+    }
+
+    public function getLogTypes() {
+        return $this->logTypes;
     }
 }

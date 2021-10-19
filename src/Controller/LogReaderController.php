@@ -28,6 +28,7 @@ class LogReaderController extends AppController
         $this->Reader = new Reader($conditions);
         $this->set('logs', $this->Reader->read());
         $this->set('files', $this->Reader->getFiles());
+        $this->set('types', $this->Reader->getLogTypes());
         $this->set('selectedFiles', !empty($conditions['files']) ? $conditions['files'] : []);
         $this->set('selectedTypes', !empty($conditions['types']) ? $conditions['types'] : []);
     }
