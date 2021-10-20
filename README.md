@@ -25,6 +25,9 @@ You can see the logs by going to
 http://app-address/log-reader
 <img src="https://i.imgur.com/8sCwLBh.png" alt="logs">
 
+## Documentation
+See the API documentation of [Log Reader](https://github.com/zunnu/log-reader/wiki)
+
 ## License
 
 Licensed under [The MIT License][mit].
