@@ -87,7 +87,12 @@ class Reader {
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
         $data = [];
-        
+            
+        // load default files
+        if(empty($selectedFiles)) {
+            $selectedFiles = ['debug.log', 'error.log'];
+        }
+
         if(!empty($files)) {
             foreach($files as $file) {
                 $file = new File($file);
@@ -118,7 +123,6 @@ class Reader {
                 }
 
                 $data[$type] .= file_get_contents($file->pwd());
-                return $data;
             }
 
             return $data;
