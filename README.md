@@ -5,6 +5,8 @@ With log reader you no longer need to read raw log files from the server. Log re
 
 Log readers API allows you to create your own custom application to help you get head of errors and provide you with useful information.
 
+CakePHP 3.x version can be found [here](https://github.com/zunnu/log-reader/tree/3.x)
+
 ## Documentation
 See the API documentation of [Log Reader](https://github.com/zunnu/log-reader/wiki)
 
