@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace LogReader\Controller;
 
 use LogReader\Controller\AppController;
@@ -12,15 +14,17 @@ class LogReaderController extends AppController
      *
      * @return void
      */
-    public function initialize() {
+    public function initialize(): void
+    {
         parent::initialize();
     }
 
     /**
      * Index method
      */
-    public function index($date = null) {
-        $this->viewBuilder()->setLayout(false);
+    public function index($date = null)
+    {
+        $this->viewBuilder()->disableAutoLayout();
         $conditions = [];
 
         // SEARCH
