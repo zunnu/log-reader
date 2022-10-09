@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace LogReader;
 use Cake\Core\Exception\Exception;
 use Cake\Filesystem\Folder;
@@ -30,7 +32,8 @@ class Reader {
         'debug' => 'Debug'
     ];
 
-    public function __construct($config = []) {
+    function __construct($config = [])
+    {
         $this->config = $config;
     }
 
@@ -38,7 +41,8 @@ class Reader {
      * Get the date of the files
      * @return array List of different dates of files
      */
-    public function getFileDates() {
+    public function getFileDates(): array
+    {
         $dates = [];
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
@@ -62,7 +66,8 @@ class Reader {
      * The files and types that are parsed need to be set in config
      * @return array List of logs
      */
-    public function read() {
+    public function read(): array
+    {
         $date = !empty($this->config['date']) ? $this->config['date'] : null;
         $selectedTypes = !empty($this->config['types']) ? $this->config['types'] : [];
         $selectedFiles = !empty($this->config['files']) ? $this->config['files'] : [];
@@ -107,7 +112,8 @@ class Reader {
      * @param  array  $selectedFiles List of files to get the logs from
      * @return array                Content of the selected files
      */
-    private function getLogFile($selectedFiles = []) {
+    private function getLogFile($selectedFiles = []): array
+    {
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
         $data = [];
@@ -158,14 +164,15 @@ class Reader {
             return $data;
         }
 
-        return false;   
+        return [];   
     }
 
     /**
      * Get list of log files inside the logs folder
      * @return array List of files
      */
-    public function getFiles() {
+    public function getFiles(): array
+    {
         $filesList = [];
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
@@ -201,7 +208,8 @@ class Reader {
      * @param  array $data  Content of log file
      * @return array       Parsed data with type, date and content
      */
-    private function _parseData($data) {
+    private function _parseData($data): array
+    {
         $data = preg_split("/\r\n|\n|\r/", $data);
         $buildData = [];
         $tmp = '';
@@ -258,7 +266,8 @@ class Reader {
      * Return available log file types
      * @return array
      */
-    public function getLogTypes() {
+    public function getLogTypes(): array
+    {
         return $this->logTypes;
     }
 }

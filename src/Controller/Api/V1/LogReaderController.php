@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace LogReader\Controller\Api\V1;
 
 use LogReader\Controller\Api\V1\AppController;
@@ -7,15 +9,23 @@ use LogReader\Reader;
 
 class LogReaderController extends AppController
 {
-    public function initialize() {
+    /**
+     * initialize method
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
         parent::initialize();
+        $this->RequestHandler->renderAs($this, 'json');
     }
 
     /**
      * Logs method
      */
-    public function logs($date = null) {
-        $this->viewBuilder()->setLayout(false);
+    public function logs($date = null)
+    {
+        $this->viewBuilder()->disableAutoLayout();
         $conditions = [];
 
         // SEARCH
@@ -31,6 +41,8 @@ class LogReaderController extends AppController
                 $types = explode(',', $data['types']);
                 $conditions['types'] = array_map('trim', array_filter($types));
             }
+        } elseif ($this->request->is('get')) {
+            $conditions['files'] = ['error.log', 'debug.log'];
         }
 
         $this->Reader = new Reader($conditions);
@@ -46,8 +58,9 @@ class LogReaderController extends AppController
      * Types method
      * Return available log types
      */
-    public function types($date = null) {
-        $this->viewBuilder()->setLayout(false);
+    public function types($date = null)
+    {
+        $this->viewBuilder()->disableAutoLayout();
         $this->Reader = new Reader();
         $types = $this->Reader->getLogTypes();
 
@@ -61,8 +74,9 @@ class LogReaderController extends AppController
      * Files method
      * Return the available log files
      */
-    public function files($date = null) {
-        $this->viewBuilder()->setLayout(false);
+    public function files($date = null)
+    {
+        $this->viewBuilder()->disableAutoLayout();
         $this->Reader = new Reader();
         $files = $this->Reader->getFiles();
 
