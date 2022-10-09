@@ -88,18 +88,24 @@ class Reader {
         $files = $folder->findRecursive('.*', true);
         $data = [];
             
-        // load default files
         if(empty($selectedFiles)) {
-            $selectedFiles = ['debug.log', 'error.log'];
+            return [];
+            // $selectedFiles = ['debug.log', 'error.log'];
         }
 
         if(!empty($files)) {
             foreach($files as $file) {
                 $file = new File($file);
                 $info = $file->info();
+                $path = null;
+
+                // check if file is under a folder inside logs folder
+                if(strpos($info['dirname'], 'logs/') !== false) {
+                    $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
+                }
 
                 if(!empty($selectedFiles)) {
-                    if(!in_array($info['basename'], $selectedFiles)) {
+                    if(!in_array((!empty($path) ? $path . '/' : '') . $info['basename'], $selectedFiles)) {
                         continue;
                     }
                 }
@@ -141,10 +147,16 @@ class Reader {
                 $file = new File($file);
                 $date = date('Y-m-d H:i:s', $file->lastChange());
                 $info = $file->info();
+                $path = null;
+
+                // check if file is under a folder inside logs folder
+                if(strpos($info['dirname'], 'logs/') !== false) {
+                    $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
+                }
 
                 if($date) {
                     $filesList[] = [
-                        'name' => $info['basename'],
+                        'name' => (!empty($path) ? $path . '/' : '') . $info['basename'],
                         'date' => $date,
                         'type' => strpos($file->name(), 'cli-debug') !== false || strpos($file->name(), 'cli-error') !== false ? 'cli' : 'app',
                     ];
