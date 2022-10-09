@@ -1,6 +1,12 @@
 # LogReader plugin for CakePHP
 
-A simple CakePHP log reader.
+Log reader helps you quickly and clearly see individual log entries of your cakePHP application.
+With log reader you no longer need to read raw log files from the server. Log reader allows you to read logs straight from the UI.
+
+Log readers API allows you to create your own custom application to help you get head of errors and provide you with useful information.
+
+## Documentation
+See the API documentation of [Log Reader](https://github.com/zunnu/log-reader/wiki)
 
 ## Requirements
 * CakePHP 3.x
@@ -11,7 +17,7 @@ A simple CakePHP log reader.
 `cd` to the root of your app folder (where the `composer.json` file is) and run the following command:
 
 ```
-composer require zunnu/log-reader
+composer require zunnu/log-reader:1.3
 ```
 
 Then load the plugin by using CakePHP's console:
