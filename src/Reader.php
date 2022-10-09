@@ -4,9 +4,20 @@ use Cake\Core\Exception\Exception;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 
+/**
+ * Reader class
+*/
 class Reader {
-    // prefixes
-    protected $config = [];
+    /*
+    * Class config
+    * Options:
+    *   Types: Used to filter the results. Available types are in $logTypes
+    *   Files: The files where to read the logs from
+    */
+    protected $config = [
+        'types' => [],
+        'files' => [],
+    ];
 
     private $logTypes = [
         'info' => 'Info',
@@ -23,6 +34,10 @@ class Reader {
         $this->config = $config;
     }
 
+    /**
+     * Get the date of the files
+     * @return array List of different dates of files
+     */
     public function getFileDates() {
         $dates = [];
         $folder = new Folder(LOGS);
@@ -42,7 +57,11 @@ class Reader {
         return array_unique($dates);
     }
  
-    // return the path to the model dir
+    /**
+     * Main reader function
+     * The files and types that are parsed need to be set in config
+     * @return array List of logs
+     */
     public function read() {
         $date = !empty($this->config['date']) ? $this->config['date'] : null;
         $selectedTypes = !empty($this->config['types']) ? $this->config['types'] : [];
@@ -83,23 +102,34 @@ class Reader {
         return $logs;
     }
 
+    /**
+     * Get logs inside file or files
+     * @param  array  $selectedFiles List of files to get the logs from
+     * @return array                Content of the selected files
+     */
     private function getLogFile($selectedFiles = []) {
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
         $data = [];
             
-        // load default files
         if(empty($selectedFiles)) {
-            $selectedFiles = ['debug.log', 'error.log'];
+            return [];
+            // $selectedFiles = ['debug.log', 'error.log'];
         }
 
         if(!empty($files)) {
             foreach($files as $file) {
                 $file = new File($file);
                 $info = $file->info();
+                $path = null;
+
+                // check if file is under a folder inside logs folder
+                if(strpos($info['dirname'], 'logs/') !== false) {
+                    $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
+                }
 
                 if(!empty($selectedFiles)) {
-                    if(!in_array($info['basename'], $selectedFiles)) {
+                    if(!in_array((!empty($path) ? $path . '/' : '') . $info['basename'], $selectedFiles)) {
                         continue;
                     }
                 }
@@ -131,6 +161,10 @@ class Reader {
         return false;   
     }
 
+    /**
+     * Get list of log files inside the logs folder
+     * @return array List of files
+     */
     public function getFiles() {
         $filesList = [];
         $folder = new Folder(LOGS);
@@ -141,10 +175,16 @@ class Reader {
                 $file = new File($file);
                 $date = date('Y-m-d H:i:s', $file->lastChange());
                 $info = $file->info();
+                $path = null;
+
+                // check if file is under a folder inside logs folder
+                if(strpos($info['dirname'], 'logs/') !== false) {
+                    $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
+                }
 
                 if($date) {
                     $filesList[] = [
-                        'name' => $info['basename'],
+                        'name' => (!empty($path) ? $path . '/' : '') . $info['basename'],
                         'date' => $date,
                         'type' => strpos($file->name(), 'cli-debug') !== false || strpos($file->name(), 'cli-error') !== false ? 'cli' : 'app',
                     ];
@@ -155,7 +195,12 @@ class Reader {
         return $filesList;
     }
 
-    // move this to regex later
+    /**
+     * Parse log file content
+     * Move this to use regex later
+     * @param  array $data  Content of log file
+     * @return array       Parsed data with type, date and content
+     */
     private function _parseData($data) {
         $data = preg_split("/\r\n|\n|\r/", $data);
         $buildData = [];
@@ -209,6 +254,10 @@ class Reader {
         return $buildData;
     }
 
+    /**
+     * Return available log file types
+     * @return array
+     */
     public function getLogTypes() {
         return $this->logTypes;
     }
