@@ -7,6 +7,11 @@ use LogReader\Reader;
 
 class LogReaderController extends AppController
 {
+    /**
+     * initialize method
+     *
+     * @return void
+     */
     public function initialize() {
         parent::initialize();
     }
