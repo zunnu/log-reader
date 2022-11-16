@@ -2,14 +2,15 @@
 declare(strict_types=1);
 
 namespace LogReader;
-use Cake\Core\Exception\Exception;
-use Cake\Filesystem\Folder;
+
 use Cake\Filesystem\File;
+use Cake\Filesystem\Folder;
 
 /**
  * Reader class
-*/
-class Reader {
+ */
+class Reader
+{
     /*
     * Class config
     * Options:
@@ -29,7 +30,7 @@ class Reader {
         'error' => 'Error',
         'warning' => 'Warning',
         'notice' => 'Notice',
-        'debug' => 'Debug'
+        'debug' => 'Debug',
     ];
 
     function __construct($config = [])
@@ -39,6 +40,7 @@ class Reader {
 
     /**
      * Get the date of the files
+     *
      * @return array List of different dates of files
      */
     public function getFileDates(): array
@@ -46,13 +48,13 @@ class Reader {
         $dates = [];
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
-        
-        if(!empty($files)) {
-            foreach($files as $file) {
+
+        if (!empty($files)) {
+            foreach ($files as $file) {
                 $file = new File($file);
                 $date = date('Y-m-d H:i:s', $file->lastChange());
 
-                if($date) {
+                if ($date) {
                     $dates[] = $date;
                 }
             }
@@ -60,10 +62,11 @@ class Reader {
 
         return array_unique($dates);
     }
- 
+
     /**
      * Main reader function
      * The files and types that are parsed need to be set in config
+     *
      * @return array List of logs
      */
     public function read(): array
@@ -74,18 +77,18 @@ class Reader {
         $data = $this->getLogFile($selectedFiles);
         $logs = [];
 
-        if($data) {
+        if ($data) {
             // todo move to regex
             $pattern = "/^(?<date>.*)\s(?<type>\w+):.(?<message>.*)/m";
 
-            foreach($data as $dataType => $d) {
+            foreach ($data as $dataType => $d) {
                 // preg_match_all($pattern, $d, $matches, PREG_SET_ORDER, 0);
                 $matches = $this->_parseData($d);
-                
-                if(!empty($matches)) {
-                    foreach($matches as $key => $match) {
-                        if(!empty($selectedTypes)) {
-                            if(in_array(strtolower($match['type']), $selectedTypes)) {
+
+                if (!empty($matches)) {
+                    foreach ($matches as $key => $match) {
+                        if (!empty($selectedTypes)) {
+                            if (in_array(strtolower($match['type']), $selectedTypes)) {
                                 $logs[] = [
                                     'date' => !empty($match['date']) ? $match['date'] : null,
                                     'type' => !empty($match['type']) ? $match['type'] : 'Unknown',
@@ -109,6 +112,7 @@ class Reader {
 
     /**
      * Get logs inside file or files
+     *
      * @param  array  $selectedFiles List of files to get the logs from
      * @return array                Content of the selected files
      */
@@ -117,44 +121,44 @@ class Reader {
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
         $data = [];
-            
-        if(empty($selectedFiles)) {
+
+        if (empty($selectedFiles)) {
             return [];
             // $selectedFiles = ['debug.log', 'error.log'];
         }
 
-        if(!empty($files)) {
-            foreach($files as $file) {
+        if (!empty($files)) {
+            foreach ($files as $file) {
                 $file = new File($file);
                 $info = $file->info();
                 $path = null;
 
                 // check if file is under a folder inside logs folder
-                if(strpos($info['dirname'], 'logs/') !== false) {
+                if (strpos($info['dirname'], 'logs/') !== false) {
                     $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
                 }
 
-                if(!empty($selectedFiles)) {
-                    if(!in_array((!empty($path) ? $path . '/' : '') . $info['basename'], $selectedFiles)) {
+                if (!empty($selectedFiles)) {
+                    if (!in_array((!empty($path) ? $path . '/' : '') . $info['basename'], $selectedFiles)) {
                         continue;
                     }
                 }
 
                 // $date = date('Y-m-d H:i:s', $file->lastChange());
-                
-                if(strpos($file->name(), 'cli-debug') !== false) {
+
+                if (strpos($file->name(), 'cli-debug') !== false) {
                     $type = 'cli-debug';
-                } elseif(strpos($file->name(), 'cli-error') !== false) {
+                } elseif (strpos($file->name(), 'cli-error') !== false) {
                     $type = 'cli-error';
-                } elseif(strpos($file->name(), 'error') !== false) {
+                } elseif (strpos($file->name(), 'error') !== false) {
                     $type = 'error';
-                } elseif(strpos($file->name(), 'debug') !== false) {
+                } elseif (strpos($file->name(), 'debug') !== false) {
                     $type = 'debug';
                 } else {
                     $type = 'unknown';
                 }
-                
-                if(!isset($data[$type])) {
+
+                if (!isset($data[$type])) {
                     $data[$type] = '';
                 }
 
@@ -164,11 +168,12 @@ class Reader {
             return $data;
         }
 
-        return [];   
+        return [];
     }
 
     /**
      * Get list of log files inside the logs folder
+     *
      * @return array List of files
      */
     public function getFiles(): array
@@ -176,20 +181,20 @@ class Reader {
         $filesList = [];
         $folder = new Folder(LOGS);
         $files = $folder->findRecursive('.*', true);
-        
-        if(!empty($files)) {
-            foreach($files as $file) {
+
+        if (!empty($files)) {
+            foreach ($files as $file) {
                 $file = new File($file);
                 $date = date('Y-m-d H:i:s', $file->lastChange());
                 $info = $file->info();
                 $path = null;
 
                 // check if file is under a folder inside logs folder
-                if(strpos($info['dirname'], 'logs/') !== false) {
+                if (strpos($info['dirname'], 'logs/') !== false) {
                     $path = substr($info['dirname'], strrpos($info['dirname'], '/') + 1);
                 }
 
-                if($date) {
+                if ($date) {
                     $filesList[] = [
                         'name' => (!empty($path) ? $path . '/' : '') . $info['basename'],
                         'date' => $date,
@@ -205,6 +210,7 @@ class Reader {
     /**
      * Parse log file content
      * Move this to use regex later
+     *
      * @param  array $data  Content of log file
      * @return array       Parsed data with type, date and content
      */
@@ -216,15 +222,15 @@ class Reader {
         $first = true;
         $last = false;
 
-        if(!empty($data)) {
-            foreach($data as $k => $d) {
+        if (!empty($data)) {
+            foreach ($data as $k => $d) {
                 $d = explode(' ', $d);
                 // dd($data);
 
-                if(isset($d[0]) && isset($d[1])) {
+                if (isset($d[0]) && isset($d[1])) {
                     $date = $d[0] . ' ' . $d[1];
 
-                    if(\DateTime::createFromFormat('Y-m-d H:i:s', $date) !== false) {
+                    if (\DateTime::createFromFormat('Y-m-d H:i:s', $date) !== false) {
                         $type = str_replace(':', '', $d[2]);
                         unset($d[0]);
                         unset($d[1]);
@@ -238,13 +244,13 @@ class Reader {
                     $newLine = false;
                 }
 
-                if($k == 15) {
+                if ($k == 15) {
                     // dd($newLine);
                 }
 
                 $message = implode(' ', $d);
 
-                if($newLine) {
+                if ($newLine) {
                     // new line
                     $buildData[] = [
                         'date' => $date,
@@ -264,6 +270,7 @@ class Reader {
 
     /**
      * Return available log file types
+     *
      * @return array
      */
     public function getLogTypes(): array

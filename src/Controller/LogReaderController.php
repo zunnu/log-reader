@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace LogReader\Controller;
 
-use LogReader\Controller\AppController;
-use Cake\Log\Log;
 use LogReader\Reader;
 
 class LogReaderController extends AppController
@@ -29,7 +27,7 @@ class LogReaderController extends AppController
 
         // SEARCH
         if ($this->request->is('get')) {
-            if(!empty($this->request->getQueryParams())) {
+            if (!empty($this->request->getQueryParams())) {
                 $conditions = $this->request->getQueryParams();
             }
         }
