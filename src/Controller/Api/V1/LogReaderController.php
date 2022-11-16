@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace LogReader\Controller\Api\V1;
 
-use LogReader\Controller\Api\V1\AppController;
-use Cake\Log\Log;
 use LogReader\Reader;
 
 class LogReaderController extends AppController
@@ -32,12 +30,12 @@ class LogReaderController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
 
-            if(!empty($data['files'])) {
+            if (!empty($data['files'])) {
                 $files = explode(',', $data['files']);
                 $conditions['files'] = array_map('trim', array_filter($files));
             }
 
-            if(!empty($data['types'])) {
+            if (!empty($data['types'])) {
                 $types = explode(',', $data['types']);
                 $conditions['types'] = array_map('trim', array_filter($types));
             }
@@ -50,7 +48,7 @@ class LogReaderController extends AppController
 
         $this->set([
             'logs' => $logs,
-            '_serialize' => ['logs']
+            '_serialize' => ['logs'],
         ]);
     }
 
@@ -66,7 +64,7 @@ class LogReaderController extends AppController
 
         $this->set([
             'types' => $types,
-            '_serialize' => ['types']
+            '_serialize' => ['types'],
         ]);
     }
 
@@ -82,7 +80,7 @@ class LogReaderController extends AppController
 
         $this->set([
             'files' => $files,
-            '_serialize' => ['files']
+            '_serialize' => ['files'],
         ]);
     }
 }
